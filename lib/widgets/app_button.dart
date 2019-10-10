@@ -3,8 +3,9 @@ import 'package:flutter/material.dart';
 class AppButton extends StatelessWidget {
   String login;
   Function onPressed;
+  bool showProgress;
 
-  AppButton(this.login, {this.onPressed});
+  AppButton(this.login, {this.onPressed, this.showProgress = false});
 
   @override
   Widget build(BuildContext context) {
@@ -14,7 +15,13 @@ class AppButton extends StatelessWidget {
       height: 46,
       child: RaisedButton(
         color: Colors.blue,
-        child: Text(
+        child: showProgress
+        ? Center(
+          child: CircularProgressIndicator(
+            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+          ),
+        )
+        : Text(
           login,
           style: TextStyle(
             color: Colors.white,

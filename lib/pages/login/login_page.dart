@@ -1,5 +1,11 @@
-import 'package:carros/pages/home_page.dart';
-import 'package:carros/pages/login_api.dart';
+import 'dart:async';
+
+import 'package:carros/pages/api_response.dart';
+import 'package:carros/pages/carro/home_page.dart';
+import 'package:carros/pages/login/login_api.dart';
+import 'package:carros/pages/login/login_bloc.dart';
+import 'package:carros/pages/login/usuario.dart';
+import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
@@ -13,17 +19,34 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-  final _tLogin = TextEditingController(text: 'Kleber');
 
-  final _tSenha = TextEditingController(text: '123');
+
+  final _tLogin = TextEditingController();
+
+  final _tSenha = TextEditingController();
 
   final _focusSenha = FocusNode();
+
+  final _bloc = LoginBloc();
+
+
+  @override
+  void initState() {
+    // TODO: implement initState
+    super.initState();
+    Future<Usuario> future = Usuario.get();
+    future.then((Usuario user) {
+      if (user != null) {
+        push(context, HomePage(), replace: true);
+      }
+    });
+  }
 
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text("Carros"),
+        title: Text("Flutter Multimarcas"),
       ),
       body: _body(),
     );
@@ -60,9 +83,15 @@ class _LoginPageState extends State<LoginPage> {
             SizedBox(
               height: 20,
             ),
-            AppButton(
-              "Login",
-              onPressed: _onClickLogin,
+            StreamBuilder<bool>(
+              stream: _bloc.stream,
+              builder: (context, snapshot) {
+                return AppButton(
+                  "Login",
+                  onPressed: _onClickLogin,
+                  showProgress: snapshot.data ?? false,
+                );
+              }
             )
           ],
         ),
@@ -78,14 +107,16 @@ class _LoginPageState extends State<LoginPage> {
     String senha = _tSenha.text;
     print('login: $login, senha: $senha');
 
-    bool ok = await LoginApi.login(login, senha);
 
-    if(ok){
-      push(context, HomePage());
-    }else{
-      print('Login incorreto');
+    ApiResponse response = await _bloc.login(login, senha);
+
+    if (response.ok) {
+      Usuario user = response.result;
+      push(context, HomePage(), replace: true);
+    } else {
+      alert(context, response.msg);
     }
-    
+
   }
 
   String _validateLogin(String text) {
@@ -108,5 +139,6 @@ class _LoginPageState extends State<LoginPage> {
   @override
   void dispose() {
     super.dispose();
+    _bloc.dispose();
   }
 }
