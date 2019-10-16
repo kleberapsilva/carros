@@ -1,6 +1,6 @@
 import 'package:carros/drawer_list.dart';
 import 'package:carros/pages/carro/carros_api.dart';
-import 'package:carros/pages/carro/carros_listview.dart';
+import 'package:carros/pages/carro/carros_page.dart';
 import 'package:carros/utils/prefs.dart';
 import 'package:flutter/material.dart';
 
@@ -15,21 +15,20 @@ class _HomePageState extends State<HomePage>
 
   @override
   void initState() {
-    // TODO: implement initState
     super.initState();
 
     _initTabs();
-
   }
 
   _initTabs() async {
+
     _tabController = TabController(length: 3, vsync: this);
 
-    _tabController.index = await Prefs.getInt('tabIdx');
+    _tabController.index = await Prefs.getInt("tabIdx");
 
     _tabController.addListener((){
-      print('Tab ${_tabController.index}');
-      Prefs.setInt('tabIdx', _tabController.index);
+
+      Prefs.setInt("tabIdx", _tabController.index);
     });
   }
 
@@ -37,25 +36,28 @@ class _HomePageState extends State<HomePage>
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
-        title: Text('Flutter Multimarcas'),
-        bottom: TabBar(controller: _tabController, tabs: [
-          Tab(
-            text: 'Clássicos',
-          ),
-          Tab(
-            text: 'Esportivos',
-          ),
-          Tab(
-            text: 'Luxo',
-          )
-        ]),
+        title: Text("Carros"),
+        bottom: TabBar(
+          controller: _tabController,
+          tabs: [
+            Tab(
+              text: "Clássicos",
+            ),
+            Tab(
+              text: "Esportivos",
+            ),
+            Tab(
+              text: "Luxo",
+            )
+          ],
+        ),
       ),
       body: TabBarView(
         controller: _tabController,
-        children: <Widget>[
-          CarrosListView(TipoCarro.classicos),
-          CarrosListView(TipoCarro.esportivos),
-          CarrosListView(TipoCarro.luxo),
+        children: [
+          CarrosPage(TipoCarro.classicos),
+          CarrosPage(TipoCarro.esportivos),
+          CarrosPage(TipoCarro.luxo),
         ],
       ),
       drawer: DrawerList(),
