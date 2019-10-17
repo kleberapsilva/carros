@@ -1,7 +1,7 @@
-
 import 'dart:convert' as convert;
 
 import 'package:carros/pages/carro/carro.dart';
+import 'package:carros/pages/favoritos/carro_dao.dart';
 import 'package:carros/pages/login/usuario.dart';
 import 'package:http/http.dart' as http;
 
@@ -9,7 +9,6 @@ class TipoCarro {
   static final String classicos = 'classicos';
   static final String esportivos = 'esportivos';
   static final String luxo = 'luxo';
-
 }
 
 class CarrosApi {
@@ -26,9 +25,8 @@ class CarrosApi {
 
     List list = convert.json.decode(json);
 
-    List<Carro> carros = list.map<Carro>((map) => Carro.fromJson(map)).toList();
+    List<Carro> carros = list.map<Carro>((map) => Carro.fromMap(map)).toList();
 
     return carros;
-
   }
 }
