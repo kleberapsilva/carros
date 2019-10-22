@@ -46,8 +46,8 @@ class DatabaseHelper {
       Database db, int oldVersion, int newVersion) async {
     print("_onUpgrade: oldVersion: $oldVersion > newVersion: $newVersion");
 
-    if (oldVersion == 1 && newVersion == 1) {
-      await db.execute("alter table carro add column NOVA TEXT");
+    if (oldVersion == 1 && newVersion == 2) {
+      //await db.execute("alter table carro add column NOVA TEXT");
     }
   }
 
