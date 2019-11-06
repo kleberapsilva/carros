@@ -9,25 +9,24 @@ class AppButton extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-
-    
     return Container(
-      height: 46,
+      height: 50,
+      margin: new EdgeInsets.only(top: 20),
       child: RaisedButton(
         color: Colors.blue,
         child: showProgress
-        ? Center(
-          child: CircularProgressIndicator(
-            valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
-          ),
-        )
-        : Text(
-          login,
-          style: TextStyle(
-            color: Colors.white,
-            fontSize: 22,
-          ),
-        ),
+            ? Center(
+                child: CircularProgressIndicator(
+                  valueColor: AlwaysStoppedAnimation<Color>(Colors.white),
+                ),
+              )
+            : Text(
+                login,
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 22,
+                ),
+              ),
         onPressed: onPressed,
       ),
     );
