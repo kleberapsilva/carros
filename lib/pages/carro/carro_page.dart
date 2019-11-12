@@ -1,6 +1,9 @@
 import 'package:cached_network_image/cached_network_image.dart';
 import 'package:carros/pages/carro/carro.dart';
+import 'package:carros/pages/carro/carro_form_page.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
+import 'package:carros/pages/favoritos/favorito_service.dart';
+import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
 
@@ -14,9 +17,17 @@ class CarroPage extends StatefulWidget {
 }
 
 class _CarroPageState extends State<CarroPage> {
+  Color color = Colors.grey;
+
+  Carro get carro => widget.carro;
   final _loripsumApiBloc = LoripsumBloc();
   @override
   void initState() {
+    FavoritoService.isFavorito(carro).then((favorito) {
+      setState(() {
+        color = favorito ? Colors.red : Colors.grey;
+      });
+    });
     // TODO: implement initState
     super.initState();
     _loripsumApiBloc.fetch();
@@ -65,8 +76,7 @@ class _CarroPageState extends State<CarroPage> {
     return Container(
       child: ListView(
         children: <Widget>[
-          CachedNetworkImage(
-              imageUrl:widget.carro.urlFoto),
+          CachedNetworkImage(imageUrl: widget.carro.urlFoto),
           _bloco1(),
           Divider(),
           _bloco2(),
@@ -99,7 +109,7 @@ class _CarroPageState extends State<CarroPage> {
             IconButton(
               icon: Icon(
                 Icons.favorite,
-                color: Colors.red,
+                color: color,
                 size: 40,
               ),
               onPressed: _onClickFavorito,
@@ -124,6 +134,11 @@ class _CarroPageState extends State<CarroPage> {
   _onClickPopupMenu(String value) {
     switch (value) {
       case 'Editar':
+        push(
+            context,
+            CarroFormPage(
+              carro: carro,
+            ));
         break;
       case 'Deletar':
         break;
@@ -132,7 +147,13 @@ class _CarroPageState extends State<CarroPage> {
     }
   }
 
-  void _onClickFavorito() {}
+  void _onClickFavorito() async {
+    bool favorito = await FavoritoService.favoritar(carro);
+
+    setState(() {
+      color = favorito ? Colors.red : Colors.grey;
+    });
+  }
 
   void _onClickShare() {}
 
@@ -140,17 +161,23 @@ class _CarroPageState extends State<CarroPage> {
     return Column(
       crossAxisAlignment: CrossAxisAlignment.start,
       children: <Widget>[
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         text(widget.carro.descricao, fontSize: 16, bold: true),
-        SizedBox(height: 20,),
+        SizedBox(
+          height: 20,
+        ),
         StreamBuilder<String>(
           stream: _loripsumApiBloc.stream,
           builder: (BuildContext context, AsyncSnapshot snapshot) {
-            if(!snapshot.hasData) {
-              return Center(child: CircularProgressIndicator(),);
+            if (!snapshot.hasData) {
+              return Center(
+                child: CircularProgressIndicator(),
+              );
             }
 
-            return text(snapshot.data,fontSize: 16);
+            return text(snapshot.data, fontSize: 16);
           },
         )
       ],
