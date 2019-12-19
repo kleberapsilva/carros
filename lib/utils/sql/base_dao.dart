@@ -6,33 +6,31 @@ import 'package:sqflite/sqflite.dart';
 
 // Data Access Object
 abstract class BaseDAO<T extends Entity> {
-
   Future<Database> get db => DatabaseHelper.getInstance().db;
 
   String get tableName;
 
   Future<int> save(T entity) async {
     var dbClient = await db;
-    var id = await dbClient.insert(tableName, entity.toMap(),
-        conflictAlgorithm: ConflictAlgorithm.replace);
-    print('id: $id');
+    var id = await dbClient.insert(tableName, entity.toMap(), conflictAlgorithm: ConflictAlgorithm.replace);
+    //print('id: $id');
     return id;
   }
 
-  Future<List<T>> query(String sql,[List<dynamic> arguments]) async {
+  Future<List<T>> query(String sql, [List<dynamic> arguments]) async {
     final dbClient = await db;
 
-    final list = await dbClient.rawQuery(sql,arguments);
+    final list = await dbClient.rawQuery(sql, arguments);
 
     return list.map<T>((json) => fromMap(json)).toList();
   }
+
   Future<List<T>> findAll() {
     return query('select * from $tableName');
   }
 
   Future<T> findById(int id) async {
-    List<T> list =
-    await query('select * from $tableName where id = ?', [id]);
+    List<T> list = await query('select * from $tableName where id = ?', [id]);
 
     return list.length > 0 ? list.first : null;
   }

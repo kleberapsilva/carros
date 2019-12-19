@@ -6,6 +6,7 @@ import 'package:carros/pages/carro/carros_api.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/utils/alert.dart';
+import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
@@ -193,6 +194,7 @@ class _CarroPageState extends State<CarroPage> {
 
     if (response.ok) {
       alert(context, "Carro deletado com sucesso", callback: () {
+        EventBus.get(context).sendEvents(CarroEvent('carro_deletado', carro.tipo));
         pop(context);
       });
     } else {
@@ -202,7 +204,6 @@ class _CarroPageState extends State<CarroPage> {
 
   @override
   void dispose() {
-    // TODO: implement dispose
     super.dispose();
     _loripsumApiBloc.dispose();
   }
