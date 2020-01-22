@@ -10,6 +10,8 @@
         android:name="io.flutter.app.FlutterApplication"
         android:label="carros"
         android:icon="@mipmap/ic_launcher">
+        <meta-data android:name="com.google.android.geo.API_KEY"
+               android:value="AIzaSyDUGZwI10Ez8uq2O1JXlhGOJ_8mFwfyJFs"/>
         <activity
             android:name=".MainActivity"
             android:launchMode="singleTop"

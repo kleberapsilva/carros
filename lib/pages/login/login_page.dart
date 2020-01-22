@@ -9,6 +9,7 @@ import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/app_button.dart';
 import 'package:carros/widgets/app_text.dart';
 import 'package:flutter/material.dart';
+import 'package:flutter_auth_buttons/flutter_auth_buttons.dart';
 
 class LoginPage extends StatefulWidget {
   @override
@@ -18,8 +19,6 @@ class LoginPage extends StatefulWidget {
 class _LoginPageState extends State<LoginPage> {
   final _formKey = GlobalKey<FormState>();
 
-
-
   final _tLogin = TextEditingController();
 
   final _tSenha = TextEditingController();
@@ -27,7 +26,6 @@ class _LoginPageState extends State<LoginPage> {
   final _focusSenha = FocusNode();
 
   final _bloc = LoginBloc();
-
 
   @override
   void initState() {
@@ -83,14 +81,20 @@ class _LoginPageState extends State<LoginPage> {
               height: 20,
             ),
             StreamBuilder<bool>(
-              stream: _bloc.stream,
-              builder: (context, snapshot) {
-                return AppButton(
-                  "Login",
-                  onPressed: _onClickLogin,
-                  showProgress: snapshot.data ?? false,
-                );
-              }
+                stream: _bloc.stream,
+                builder: (context, snapshot) {
+                  return AppButton(
+                    "Login",
+                    onPressed: _onClickLogin,
+                    showProgress: snapshot.data ?? false,
+                  );
+                }),
+            Container(
+              height: 46,
+              margin: EdgeInsets.only(top: 20),
+              child: GoogleSignInButton(
+                onPressed: _onClickGoogle,
+              ),
             )
           ],
         ),
@@ -106,7 +110,6 @@ class _LoginPageState extends State<LoginPage> {
     String senha = _tSenha.text;
     print('login: $login, senha: $senha');
 
-
     ApiResponse response = await _bloc.login(login, senha);
 
     if (response.ok) {
@@ -115,7 +118,6 @@ class _LoginPageState extends State<LoginPage> {
     } else {
       alert(context, response.msg);
     }
-
   }
 
   String _validateLogin(String text) {
@@ -140,4 +142,6 @@ class _LoginPageState extends State<LoginPage> {
     super.dispose();
     _bloc.dispose();
   }
+
+  void _onClickGoogle() {}
 }

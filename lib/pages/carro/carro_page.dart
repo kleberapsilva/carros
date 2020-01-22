@@ -4,12 +4,16 @@ import 'package:carros/pages/carro/carro.dart';
 import 'package:carros/pages/carro/carro_form_page.dart';
 import 'package:carros/pages/carro/carros_api.dart';
 import 'package:carros/pages/carro/loripsum_api.dart';
+import 'package:carros/pages/carro/map_page.dart';
+import 'package:carros/pages/carro/video_player.dart';
 import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/utils/alert.dart';
 import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/nav.dart';
 import 'package:carros/widgets/text.dart';
 import 'package:flutter/material.dart';
+import 'package:share/share.dart';
+import 'package:url_launcher/url_launcher.dart';
 
 class CarroPage extends StatefulWidget {
   Carro carro;
@@ -32,7 +36,7 @@ class _CarroPageState extends State<CarroPage> {
         color = favorito ? Colors.red : Colors.grey;
       });
     });
-    // TODO: implement initState
+
     super.initState();
     _loripsumApiBloc.fetch();
   }
@@ -48,9 +52,10 @@ class _CarroPageState extends State<CarroPage> {
             onPressed: _onClickMapa,
           ),
           IconButton(
-            icon: Icon(Icons.videocam),
-            onPressed: _onClickVideo,
-          ),
+              icon: Icon(Icons.videocam),
+              onPressed: () {
+                _onClickVideo(context);
+              }),
           PopupMenuButton<String>(
             onSelected: (String value) => _onClickPopupMenu(value),
             itemBuilder: (BuildContext context) {
@@ -119,21 +124,36 @@ class _CarroPageState extends State<CarroPage> {
               onPressed: _onClickFavorito,
             ),
             IconButton(
-              icon: Icon(
-                Icons.share,
-                size: 40,
-              ),
-              onPressed: _onClickShare,
-            )
+                icon: Icon(
+                  Icons.share,
+                  size: 40,
+                ),
+                onPressed: () {
+                  _onClickShare(context, widget.carro);
+                })
           ],
         )
       ],
     );
   }
 
-  void _onClickMapa() {}
+  void _onClickMapa() {
+    if (carro.latitude != null && carro.longitude != null) {
+      push(context, MapPage(carro));
+    } else {
+      alert(context, "Este carro não possui Lat/Lng da fábrica.");
+    }
+  }
 
-  void _onClickVideo() {}
+  void _onClickVideo(context) {
+    if (carro.urlVideo != null && carro.urlVideo.isNotEmpty) {
+      //launch(carro.urlVideo);
+
+      push(context, VideoPage(carro));
+    } else {
+      alert(context, "Este carro não possui nenhum vídeo");
+    }
+  }
 
   _onClickPopupMenu(String value) {
     switch (value) {
@@ -148,6 +168,7 @@ class _CarroPageState extends State<CarroPage> {
         deletar();
         break;
       case 'Share':
+        _onClickShare(context, widget.carro);
         break;
     }
   }
@@ -160,7 +181,9 @@ class _CarroPageState extends State<CarroPage> {
     });
   }
 
-  void _onClickShare() {}
+  void _onClickShare(BuildContext context, c) {
+    Share.share(c.urlFoto);
+  }
 
   _bloco2() {
     return Column(

@@ -2,6 +2,8 @@ import 'package:carros/utils/event_bus.dart';
 import 'package:carros/utils/sql/entity.dart';
 import 'dart:convert' as convert;
 
+import 'package:google_maps_flutter/google_maps_flutter.dart';
+
 class CarroEvent extends Event {
   CarroEvent(this.acao, this.tipo);
   String acao;
@@ -22,6 +24,7 @@ class Carro extends Entity {
   int id;
   String descricao;
   String longitude;
+  get latlng => LatLng(latitude == null || latitude.isEmpty ? 0.0 : double.parse(latitude), longitude == null || longitude.isEmpty ? 0.0 : double.parse(longitude));
 
   Carro({this.tipo, this.urlVideo, this.urlFoto, this.latitude, this.nome, this.id, this.descricao, this.longitude});
 
