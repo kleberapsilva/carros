@@ -1,6 +1,6 @@
-import 'dart:async';
-
+import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/api_response.dart';
+import 'package:carros/pages/cadastro/cadastro_page.dart';
 import 'package:carros/pages/carro/home_page.dart';
 import 'package:carros/pages/login/login_bloc.dart';
 import 'package:carros/pages/login/usuario.dart';
@@ -95,6 +95,18 @@ class _LoginPageState extends State<LoginPage> {
               child: GoogleSignInButton(
                 onPressed: _onClickGoogle,
               ),
+            ),
+            Container(
+              height: 46,
+              margin: EdgeInsets.only(top: 20),
+              child: InkWell(
+                onTap: _onClickCadastrar,
+                child: Text(
+                  "Cadastre-se",
+                  textAlign: TextAlign.center,
+                  style: TextStyle(fontSize: 22, color: Colors.blue, decoration: TextDecoration.underline),
+                ),
+              ),
             )
           ],
         ),
@@ -143,5 +155,18 @@ class _LoginPageState extends State<LoginPage> {
     _bloc.dispose();
   }
 
-  void _onClickGoogle() {}
+  _onClickGoogle() async {
+    final service = FirebaseService();
+    ApiResponse response = await service.loginGoogle();
+
+    if (response.ok) {
+      push(context, HomePage(), replace: true);
+    } else {
+      alert(context, response.msg);
+    }
+  }
+
+  void _onClickCadastrar() async {
+    push(context, CadastroPage(), replace: true);
+  }
 }

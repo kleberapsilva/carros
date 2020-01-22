@@ -1,5 +1,6 @@
 import 'package:carros/utils/prefs.dart';
 import 'dart:convert' as convert;
+
 class Usuario {
   String login;
   String nome;
@@ -8,13 +9,7 @@ class Usuario {
   String token;
   List<String> roles;
 
-  Usuario(
-      {this.login,
-        this.nome,
-        this.email,
-        this.urlFoto,
-        this.token,
-        this.roles});
+  Usuario({this.login, this.nome, this.email, this.urlFoto, this.token, this.roles});
 
   Usuario.fromJson(Map<String, dynamic> json) {
     login = json['login'];
@@ -22,7 +17,7 @@ class Usuario {
     email = json['email'];
     urlFoto = json['urlFoto'];
     token = json['token'];
-    roles = json['roles'].cast<String>();
+    roles = json['roles'] != null ? json['roles'].cast<String>() : null;
   }
 
   Map<String, dynamic> toJson() {
@@ -49,7 +44,7 @@ class Usuario {
 
   static Future<Usuario> get() async {
     String json = await Prefs.getString('user.prefs');
-    if(json.isEmpty){
+    if (json.isEmpty) {
       return null;
     }
     Map map = convert.json.decode(json);

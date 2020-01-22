@@ -8,14 +8,9 @@ class LoginApi {
     try {
       var url = 'http://carros-springboot.herokuapp.com/api/v2/login';
 
-      Map params = {
-        "username": login,
-        "password": senha
-      };
+      Map params = {"username": login, "password": senha};
 
-      Map<String, String> headers = {
-        'Content-Type': 'application/json'
-      };
+      Map<String, String> headers = {'Content-Type': 'application/json'};
       String s = json.encode(params);
 
       var response = await http.post(url, body: s, headers: headers);
@@ -27,12 +22,12 @@ class LoginApi {
         user.save();
         Usuario user2 = await Usuario.get();
         print('user2: $user2');
-        return ApiResponse.ok(user);
+        return ApiResponse.ok(result: user);
       }
-      return ApiResponse.error(mapResponse['error']);
-    } catch(error, exception){
+      return ApiResponse.error(msg: mapResponse['error']);
+    } catch (error, exception) {
       print('Erro no login $error > $exception');
-      return ApiResponse.error('Não foi possivel fazer o login');
+      return ApiResponse.error(msg: 'Não foi possivel fazer o login');
     }
   }
 }
