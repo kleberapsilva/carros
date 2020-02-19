@@ -31,7 +31,7 @@ class _CarroPageState extends State<CarroPage> {
   final _loripsumApiBloc = LoripsumBloc();
   @override
   void initState() {
-    FavoritoService.isFavorito(carro).then((favorito) {
+    FavoritoService().isFavorito(carro).then((favorito) {
       setState(() {
         color = favorito ? Colors.red : Colors.grey;
       });
@@ -174,7 +174,7 @@ class _CarroPageState extends State<CarroPage> {
   }
 
   void _onClickFavorito() async {
-    bool favorito = await FavoritoService.favoritar(context, carro);
+    bool favorito = await FavoritoService().favoritar(carro);
 
     setState(() {
       color = favorito ? Colors.red : Colors.grey;

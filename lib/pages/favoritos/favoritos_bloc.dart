@@ -11,20 +11,20 @@ class FavoritosBloc {
 
   get stream => _streamController.stream;
 
-  fetch() async {
-    try {
+  // fetch() async {
+  //   try {
 
-      List<Carro> carros = await FavoritoService.getCarros();
+  //     List<Carro> carros = await FavoritoService.getCarros();
 
-      _streamController.add(carros);
-    } catch (e) {
-      _streamController.addError(e);
-    }
-  }
+  //     _streamController.add(carros);
+  //   } catch (e) {
+  //     _streamController.addError(e);
+  //   }
+  // }
 
-  void dispose() {
-    // TODO: implement dispose
+  // void dispose() {
+  //   // TODO: implement dispose
 
-    _streamController.close();
-  }
+  //   _streamController.close();
+  // }
 }

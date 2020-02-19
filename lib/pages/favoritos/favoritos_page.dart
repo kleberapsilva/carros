@@ -2,8 +2,10 @@ import 'package:carros/main.dart';
 import 'package:carros/pages/carro/carro.dart';
 
 import 'package:carros/pages/carro/carros_listview.dart';
+import 'package:carros/pages/favoritos/favorito_service.dart';
 import 'package:carros/pages/favoritos/favoritos_bloc.dart';
 import 'package:carros/widgets/text_error.dart';
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:provider/provider.dart';
 
@@ -23,18 +25,16 @@ class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveCl
   @override
   void initState() {
     super.initState();
-    FavoritosBloc favoritosBloc = Provider.of<FavoritosBloc>(context, listen: false);
-    favoritosBloc.fetch();
+    // FavoritosBloc favoritosBloc = Provider.of<FavoritosBloc>(context, listen: false);
+    // favoritosBloc.fetch();
   }
 
   @override
   Widget build(BuildContext context) {
     super.build(context);
-    FavoritosBloc favoritosBloc = Provider.of<FavoritosBloc>(
-      context,
-    );
-    return StreamBuilder(
-      stream: favoritosBloc.stream,
+
+    return StreamBuilder<QuerySnapshot>(
+      stream: FavoritoService().stream,
       builder: (context, snapshot) {
         if (snapshot.hasError) {
           return TextError("Não foi possível buscar os carros");
@@ -46,17 +46,40 @@ class _FavoritosPageState extends State<FavoritosPage> with AutomaticKeepAliveCl
           );
         }
 
-        List<Carro> carros = snapshot.data;
+        List<Carro> carros = snapshot.data.documents.map((DocumentSnapshot document) {
+          return Carro.fromMap(document.data);
+        }).toList();
 
-        return RefreshIndicator(
-          onRefresh: _onRefresh,
-          child: CarrosListView(carros),
-        );
+        return CarrosListView(carros);
       },
     );
+    // FavoritosBloc favoritosBloc = Provider.of<FavoritosBloc>(
+    //   context,
+    // );
+    // return StreamBuilder(
+    //   stream: favoritosBloc.stream,
+    //   builder: (context, snapshot) {
+    //     if (snapshot.hasError) {
+    //       return TextError("Não foi possível buscar os carros");
+    //     }
+
+    //     if (!snapshot.hasData) {
+    //       return Center(
+    //         child: CircularProgressIndicator(),
+    //       );
+    //     }
+
+    //     List<Carro> carros = snapshot.data;
+
+    //     return RefreshIndicator(
+    //       onRefresh: _onRefresh,
+    //       child: CarrosListView(carros),
+    //     );
+    //   },
+    // );
   }
 
-  Future<void> _onRefresh() {
-    return Provider.of<FavoritosBloc>(context).fetch();
-  }
+  // Future<void> _onRefresh() {
+  //   return Provider.of<FavoritosBloc>(context).fetch();
+  // }
 }

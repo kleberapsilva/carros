@@ -26,10 +26,10 @@ class MyApp extends StatelessWidget {
           create: (context) => EventBus(),
           dispose: (context, bus) => bus.dispose(),
         ),
-        Provider<FavoritosBloc>(
-          create: (context) => FavoritosBloc(),
-          dispose: (context, bloc) => bloc.dispose(),
-        )
+        // Provider<FavoritosBloc>(
+        //   create: (context) => FavoritosBloc(),
+        //   dispose: (context, bloc) => bloc.dispose(),
+        // )
       ],
     );
   }

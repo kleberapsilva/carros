@@ -1,3 +1,4 @@
+import 'package:carros/firebase.dart';
 import 'package:carros/firebase/firebase_service.dart';
 import 'package:carros/pages/api_response.dart';
 import 'package:carros/pages/cadastro/cadastro_page.dart';
@@ -31,6 +32,7 @@ class _LoginPageState extends State<LoginPage> {
   void initState() {
     // TODO: implement initState
     super.initState();
+    initFcm();
 //    Future<Usuario> future = Usuario.get();
 //    future.then((Usuario user) {
 //      if (user != null) {
